@@ -1,0 +1,13 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Katas\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "Katas\\": "tests/"
+    },
+    "require": {
+        "phpunit/phpunit": "9.3.10"
+    }
+}
