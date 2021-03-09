@@ -2,10 +2,13 @@
     "autoload": {
         "psr-4": {
             "Katas\\": "src/"
-        }
+        },
+        "files": ["src/Greeting/greetings.php"]
     },
     "autoload-dev": {
-        "Katas\\": "tests/"
+        "psr-4": {
+            "Katas\\": "tests/"
+        }
     },
     "require": {
         "phpunit/phpunit": "9.3.10"
