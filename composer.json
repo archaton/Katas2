@@ -1,7 +1,8 @@
 {
     "autoload": {
         "psr-4": {
-            "Katas\\": "src/"
+            "Katas\\": "src/",
+            "Spending\\": "anotherVendor"
         },
         "files": ["src/Greeting/greetings.php"]
     },
