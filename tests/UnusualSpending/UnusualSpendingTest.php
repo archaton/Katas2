@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Katas\UnusualSpending;
 
 use PHPUnit\Framework\TestCase;
-use Spending\PaymentApi\Category;
-use Spending\PaymentApi\Payment;
+use Spending\PaymentApi\Category as ApiCategory;
+use Spending\PaymentApi\Payment as ApiPayment;
 
 class UnusualSpendingTest extends TestCase
 {
@@ -25,26 +25,26 @@ class UnusualSpendingTest extends TestCase
         $previousMonth = new BillingMonth(3, 2021);
 
         $previousPayments = [
-            new Payment(50.0, 'shop', new Category(Category::GROCERIES)),
-            new Payment(48.0, 'shop', new Category(Category::GROCERIES)),
-            new Payment(300.0, 'trip', new Category(Category::TRAVEL)),
-            new Payment(328.0, 'trip', new Category(Category::TRAVEL)),
-            new Payment(25.0, 'tournament', new Category(Category::GOLF)),
-            new Payment(10.0, 'movie', new Category(Category::ENTERTAINMENT)),
+            new ApiPayment(50.0, 'shop', new ApiCategory(ApiCategory::GROCERIES)),
+            new ApiPayment(48.0, 'shop', new ApiCategory(ApiCategory::GROCERIES)),
+            new ApiPayment(300.0, 'trip', new ApiCategory(ApiCategory::TRAVEL)),
+            new ApiPayment(328.0, 'trip', new ApiCategory(ApiCategory::TRAVEL)),
+            new ApiPayment(25.0, 'tournament', new ApiCategory(ApiCategory::GOLF)),
+            new ApiPayment(10.0, 'movie', new ApiCategory(ApiCategory::ENTERTAINMENT)),
         ];
         $payments = [
-            new Payment(50.0, 'shop', new Category(Category::GROCERIES)),
-            new Payment(50.0, 'shop', new Category(Category::GROCERIES)),
-            new Payment(48.0, 'shop', new Category(Category::GROCERIES)),
-            new Payment(300.0, 'trip', new Category(Category::TRAVEL)),
-            new Payment(300.0, 'trip', new Category(Category::TRAVEL)),
-            new Payment(328.0, 'trip', new Category(Category::TRAVEL)),
-            new Payment(50.0, 'tournament', new Category(Category::GOLF)),
-            new Payment(14.99, 'movie', new Category(Category::ENTERTAINMENT)),
+            new ApiPayment(50.0, 'shop', new ApiCategory(ApiCategory::GROCERIES)),
+            new ApiPayment(50.0, 'shop', new ApiCategory(ApiCategory::GROCERIES)),
+            new ApiPayment(48.0, 'shop', new ApiCategory(ApiCategory::GROCERIES)),
+            new ApiPayment(300.0, 'trip', new ApiCategory(ApiCategory::TRAVEL)),
+            new ApiPayment(300.0, 'trip', new ApiCategory(ApiCategory::TRAVEL)),
+            new ApiPayment(328.0, 'trip', new ApiCategory(ApiCategory::TRAVEL)),
+            new ApiPayment(50.0, 'tournament', new ApiCategory(ApiCategory::GOLF)),
+            new ApiPayment(14.99, 'movie', new ApiCategory(ApiCategory::ENTERTAINMENT)),
         ];
         $filteredCategories = [
-            new SpendingCategory(new Category(Category::GROCERIES), 148.0),
-            new SpendingCategory(new Category(Category::TRAVEL), 928.0),
+            new SpendingCategory(Category::fromString(ApiCategory::GROCERIES), 148.0),
+            new SpendingCategory(Category::fromString(ApiCategory::TRAVEL), 928.0),
         ];
         $subject = 'Unusual spending of $1076 detected!';
         $body = <<<TEXT

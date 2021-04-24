@@ -6,8 +6,6 @@ declare(strict_types=1);
 namespace Katas\UnusualSpending;
 
 
-use Spending\PaymentApi\Category;
-
 class SpendingCategory
 {
     public function __construct(

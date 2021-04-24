@@ -10,29 +10,24 @@ use Spending\PaymentApi\Payment;
 
 class PaymentsService
 {
-
-    /**
-     * @param array<Payment> $payments
-     * @return array
-     */
-    public function groupByCategory(array $payments): array
+    public function __construct(
+        private GroupPaymentsService $groupPaymentsService,
+        private FilterPaymentsService $filterPaymentsService,
+    )
     {
-
     }
 
     /**
      * @param array<Payment> $payments
      * @param array<Payment> $previousPayments
-     * @param float $threshold
-     * @return array
+     * @return array<GroupedPayments>
      */
     public function getUnusualSpendingCategories(array $payments, array $previousPayments, float $threshold): array
     {
-        $groupedPayments = $this->groupByCategory($payments);
-//        $previousGroupedPayments = $this->groupByCategory($previousPayments);
+        $groupedPayments = $this->groupPaymentsService->groupByCategory($payments);
+        $previousGroupedPayments = $this->groupPaymentsService->groupByCategory($previousPayments);
 
         // filter down to the categories for which the user spent at least 50% more this month than last month
-//        $mergedCategories = $this->mergeMonths($groupedPayments, $previousGroupedPayments);
-//        $filteredCategories = $this->filterUnusualSpending(threshold: 0.5);// TODO get threshold from User?
+        return $this->filterPaymentsService->filterUnusualSpending($threshold, $groupedPayments, $previousGroupedPayments);
     }
 }
