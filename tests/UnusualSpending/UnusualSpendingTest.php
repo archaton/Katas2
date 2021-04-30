@@ -33,19 +33,25 @@ class UnusualSpendingTest extends TestCase
             new ApiPayment(25.0, 'tournament', new ApiCategory(ApiCategory::GOLF)),
             new ApiPayment(10.0, 'movie', new ApiCategory(ApiCategory::ENTERTAINMENT)),
         ];
-        $payments = [
+        $groceries = [
             new ApiPayment(50.0, 'shop', new ApiCategory(ApiCategory::GROCERIES)),
             new ApiPayment(50.0, 'shop', new ApiCategory(ApiCategory::GROCERIES)),
             new ApiPayment(48.0, 'shop', new ApiCategory(ApiCategory::GROCERIES)),
+        ];
+        $travels = [
             new ApiPayment(300.0, 'trip', new ApiCategory(ApiCategory::TRAVEL)),
             new ApiPayment(300.0, 'trip', new ApiCategory(ApiCategory::TRAVEL)),
             new ApiPayment(328.0, 'trip', new ApiCategory(ApiCategory::TRAVEL)),
+        ];
+        $payments = [
+            ...$groceries,
+            ...$travels,
             new ApiPayment(50.0, 'tournament', new ApiCategory(ApiCategory::GOLF)),
             new ApiPayment(14.99, 'movie', new ApiCategory(ApiCategory::ENTERTAINMENT)),
         ];
         $filteredCategories = [
-            new SpendingCategory(Category::fromString(ApiCategory::GROCERIES), 148.0),
-            new SpendingCategory(Category::fromString(ApiCategory::TRAVEL), 928.0),
+            new GroupedPayments(Category::fromString(ApiCategory::GROCERIES), $groceries),
+            new GroupedPayments(Category::fromString(ApiCategory::TRAVEL), $travels),
         ];
         $subject = 'Unusual spending of $1076 detected!';
         $body = <<<TEXT
