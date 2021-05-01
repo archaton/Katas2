@@ -1,0 +1,6 @@
+default:
+  suites:
+    bank_ocr_features:
+      paths: [ "%paths.base%/features/bankOcr" ]
+      contexts: [ BankOcrContext ]
+
