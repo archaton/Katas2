@@ -19,4 +19,12 @@ class BankOcrContext implements Context
     public function __construct()
     {
     }
+
+    /**
+     * @Given there is number :number with digits:
+     */
+    public function thereIsNumberWithDigits($number, PyStringNode $digits)
+    {
+        dump($number, $digits->getRaw());
+    }
 }
