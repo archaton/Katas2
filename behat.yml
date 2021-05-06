@@ -2,7 +2,9 @@ default:
   suites:
     bank_ocr_features:
       paths: [ "%paths.base%/features/bankOcr" ]
-      contexts: [ BankOcrContext ]
+      contexts:
+        - BankOcrContext:
+            - 4
 #    basket:
 #      paths: [ "%paths.base%/features/"]
 #      contexts: [ FeatureContext ]

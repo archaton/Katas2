@@ -3,12 +3,13 @@
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Katas\BankOcr\DecipherService;
+use PHPUnit\Framework\Assert;
 
-/**
- * Defines application features from the specific context.
- */
 class BankOcrContext implements Context
 {
+    private DecipherService $decipherService;
+
     /**
      * Initializes context.
      *
@@ -16,8 +17,13 @@ class BankOcrContext implements Context
      * You can also pass arbitrary arguments to the
      * context constructor through behat.yml.
      */
-    public function __construct()
+    public function __construct(
+        private int $linesNb,
+    )
     {
+        $this->decipherService = new DecipherService(
+            $linesNb
+        );
     }
 
     /**
@@ -25,6 +31,9 @@ class BankOcrContext implements Context
      */
     public function thereIsNumberWithDigits($number, PyStringNode $digits)
     {
-        dump($number, $digits->getRaw());
+        Assert::assertSame(
+            $number,
+            $this->decipherService->readEntry($digits->getRaw()),
+        );
     }
 }
