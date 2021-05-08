@@ -12,11 +12,19 @@ Feature: Scan paper documents
   - digits in range 0-9
   - a normal file contains around 500 entries
 
+  Scenario: Single digit
+    Given there is a single number "0" with digit:
+      """
+^ _ $
+^| |$
+^|_|$
+      """
+
   Scenario: User story 1
     Given there is number "000000000" with digits:
       """
- _  _  _  _  _  _  _  _  _
-| || || || || || || || || |
-|_||_||_||_||_||_||_||_||_|
+^ _  _  _  _  _  _  _  _  _ $
+^| || || || || || || || || |$
+^|_||_||_||_||_||_||_||_||_|$
 
       """
