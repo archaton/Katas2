@@ -18,10 +18,21 @@ class DecipherService
     {
     }
 
-    public function readEntry(string $entry): string
+    public function readSingleEntry(string $entry): string
     {
+        $digits = [];
+        $lines = explode("\n", $entry);
+        foreach ($lines as $lineNb => $line) {
+            if ('' === $line) {
+                continue;
+            }
+            foreach (mb_str_split($line, 3) as $strideNb => $stride) {
+                $digits[$strideNb] = ($digits[$strideNb] ?? '') . $stride;
+            }
+        }
 
-        return '';
+        $mappedSingleDigits = array_map([$this, 'readSingleDigit'], $digits);
+        return implode('', $mappedSingleDigits);
     }
 
     public function readSingleDigit(string $digit): string

@@ -50,7 +50,7 @@ class BankOcrContext implements Context
     {
         $preprocessedDigitsString = $this->decipherService->preprocess($digits);
         dump($preprocessedDigitsString);
-        $result = $this->decipherService->readEntry($preprocessedDigitsString);
+        $result = $this->decipherService->readSingleEntry($preprocessedDigitsString);
         dump($number, $result);
         Assert::assertSame(
             $number,
