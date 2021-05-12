@@ -6,8 +6,6 @@ declare(strict_types=1);
 namespace Katas\BankOcr;
 
 
-use Behat\Gherkin\Node\PyStringNode;
-
 class DecipherService
 {
     public function __construct(
@@ -23,9 +21,7 @@ class DecipherService
         $digits = [];
         $lines = explode("\n", $entry);
         foreach ($lines as $lineNb => $line) {
-            if ('' === $line) {
-                continue;
-            }
+            $line = str_pad($line, $this->charsCountPerLine);
             foreach (mb_str_split($line, 3) as $strideNb => $stride) {
                 $digits[$strideNb] = ($digits[$strideNb] ?? '') . $stride;
             }
@@ -37,7 +33,7 @@ class DecipherService
 
     public function readSingleDigit(string $digit): string
     {
-        $deflated = $this->deflate($digit);
+        $deflated = $this->inline($digit);
 
         return match ($deflated) {
             " _ " .
@@ -70,17 +66,18 @@ class DecipherService
             " _ " .
             "|_|" .
             " _|" => '9',
-            default => 'x',
+            default => '?',
         };
     }
 
-    public function deflate(string $digit): string
+    public function inline(string $digit): string
     {
         return str_replace("\n", '', $digit);
     }
 
-    public function preprocess(PyStringNode $digit): string
+    public function preprocess(string $digit): string
     {
-        return str_replace(['^', '$'], '', $digit->getRaw());
+        $digit = rtrim($digit, "\n");
+        return str_replace(['^', '$'], '', $digit);
     }
 }

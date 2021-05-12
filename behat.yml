@@ -4,9 +4,6 @@ default:
       paths: [ "%paths.base%/features/bankOcr" ]
       contexts:
         - BankOcrContext:
-            - 4
-            - 27
-            - 9
 #    basket:
 #      paths: [ "%paths.base%/features/"]
 #      contexts: [ FeatureContext ]

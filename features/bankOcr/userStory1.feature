@@ -15,16 +15,25 @@ Feature: Scan paper documents
   Scenario: Single digit
     Given there is a single number "0" with digit:
       """
-^ _ $
-^| |$
-^|_|$
+^ _
+^| |
+^|_|
       """
 
-  Scenario: User story 1
+  Scenario: User story 1.0
     Given there is number "000000000" with digits:
       """
-^ _  _  _  _  _  _  _  _  _ $
-^| || || || || || || || || |$
-^|_||_||_||_||_||_||_||_||_|$
+^ _  _  _  _  _  _  _  _  _
+^| || || || || || || || || |
+^|_||_||_||_||_||_||_||_||_|
+
+      """
+
+  Scenario: User story 1.1
+    Given there is number "111111111" with digits:
+      """
+^
+^  |  |  |  |  |  |  |  |  |
+^  |  |  |  |  |  |  |  |  |
 
       """

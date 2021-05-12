@@ -8,6 +8,11 @@ use PHPUnit\Framework\Assert;
 
 class BankOcrContext implements Context
 {
+    private const LINES_NB = 4;
+    private const CHARS_COUNT_PER_LINE = 27;
+    private const NUMBER_LENGTH = 9;
+    private const DIGIT_CHARS_COUNT = 3;
+
     private DecipherService $decipherService;
 
     /**
@@ -18,15 +23,12 @@ class BankOcrContext implements Context
      * context constructor through behat.yml.
      */
     public function __construct(
-        private int $linesNb,
-        private int $charsCountPerLine,
-        private int $numberLength,
     )
     {
         $this->decipherService = new DecipherService(
-            $linesNb,
-            $charsCountPerLine,
-            $numberLength,
+            self::LINES_NB,
+            self::CHARS_COUNT_PER_LINE,
+            self::NUMBER_LENGTH,
         );
     }
 
@@ -35,6 +37,11 @@ class BankOcrContext implements Context
      */
     public function thereIsASingleNumberWithDigit($number, PyStringNode $digit)
     {
+        $digitCharsCountWithSpecialStartMark = self::DIGIT_CHARS_COUNT + 1;
+        $digit = new PyStringNode(array_map(
+            static fn (string $line): string => str_pad($line, $digitCharsCountWithSpecialStartMark),
+            $digit->getStrings()
+        ), $digit->getLine());
         $preprocessedDigitString = $this->decipherService->preprocess($digit);
         $result = $this->decipherService->readSingleDigit($preprocessedDigitString);
         Assert::assertSame(
@@ -49,9 +56,7 @@ class BankOcrContext implements Context
     public function thereIsNumberWithDigits($number, PyStringNode $digits)
     {
         $preprocessedDigitsString = $this->decipherService->preprocess($digits);
-        dump($preprocessedDigitsString);
         $result = $this->decipherService->readSingleEntry($preprocessedDigitsString);
-        dump($number, $result);
         Assert::assertSame(
             $number,
             $result,
