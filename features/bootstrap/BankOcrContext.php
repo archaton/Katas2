@@ -62,4 +62,46 @@ class BankOcrContext implements Context
             $result,
         );
     }
+
+    /**
+     * @Given there is a valid account number :number with digits:
+     */
+    public function thereIsAValidAccountNumberWithDigits($number, PyStringNode $digits)
+    {
+        $preprocessedDigitsString = $this->decipherService->preprocess($digits);
+        $result = $this->decipherService->readSingleEntry($preprocessedDigitsString);
+        Assert::assertSame(
+            $number,
+            $result,
+        );
+        Assert::assertTrue($this->decipherService->isValidAccountNumber($result));
+    }
+
+    /**
+     * @Given there is an invalid account number :number with digits:
+     */
+    public function thereIsAnInvalidAccountNumberWithDigits($number, PyStringNode $digits)
+    {
+        $preprocessedDigitsString = $this->decipherService->preprocess($digits);
+        $result = $this->decipherService->readSingleEntry($preprocessedDigitsString);
+        Assert::assertSame(
+            $number,
+            $result,
+        );
+        Assert::assertFalse($this->decipherService->isValidAccountNumber($result));
+    }
+
+    /**
+     * @Given there is output :output with with digits:
+     */
+    public function thereIsOutputWithWithDigits($output, PyStringNode $digits)
+    {
+        $preprocessedDigitsString = $this->decipherService->preprocess($digits);
+        $result = $this->decipherService->getOutputWithStatus($preprocessedDigitsString);
+        dump($output, $result);
+        Assert::assertSame(
+            $output,
+            $result,
+        );
+    }
 }

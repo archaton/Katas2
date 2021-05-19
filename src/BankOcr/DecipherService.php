@@ -80,4 +80,28 @@ class DecipherService
         $digit = rtrim($digit, "\n");
         return str_replace(['^', '$'], '', $digit);
     }
+
+    public function isValidAccountNumber(string $result): bool
+    {
+        $wages = [9, 8, 7, 6, 5, 4, 3, 2, 1];
+        $digits = mb_str_split($result);
+        assert($this->numberLength === count($digits));
+        $checksum = 0;
+        for ($i = 0; $i < $this->numberLength; ++$i) {
+            $checksum += $digits[$i] * $wages[$i];
+        }
+        return 0 === ($checksum % 11);
+    }
+
+    public function getOutputWithStatus(string $preprocessedDigitsString): string
+    {
+        $number = $this->readSingleEntry($preprocessedDigitsString);
+        if (str_contains($number, '?')) {
+            return $number . ' ILL';
+        }
+        if (!$this->isValidAccountNumber($number)) {
+            return $number . ' ERR';
+        }
+        return $number;
+    }
 }

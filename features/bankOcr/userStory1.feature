@@ -190,3 +190,75 @@ Feature: Scan paper documents
 ^  ||_  _|  | _||_|  ||_| _|
 
       """
+
+  Scenario: User story 2
+    Given there is a valid account number "345882865" with digits:
+      """
+^ _     _  _  _  _  _  _  _
+^ _||_||_ |_||_| _||_||_ |_
+^ _|  | _||_||_||_ |_||_| _|
+
+      """
+
+  Scenario: User story 2
+    Given there is an invalid account number "345882866" with digits:
+      """
+^ _     _  _  _  _  _  _  _
+^ _||_||_ |_||_| _||_||_ |_
+^ _|  | _||_||_||_ |_||_||_|
+
+      """
+
+  Scenario: User story 3
+    Given there is output "000000051" with with digits:
+      """
+^ _  _  _  _  _  _  _  _
+^| || || || || || || ||_   |
+^|_||_||_||_||_||_||_| _|  |
+
+      """
+
+  Scenario: User story 3
+    Given there is output "49006771? ILL" with with digits:
+      """
+^    _  _  _  _  _  _     _
+^|_||_|| || ||_   |  |  | _
+^  | _||_||_||_|  |  |  | _|
+
+      """
+
+  Scenario: User story 3
+    Given there is output "1234?678? ILL" with with digits:
+      """
+^    _  _     _  _  _  _  _
+^  | _| _||_| _ |_   ||_||_|
+^  ||_  _|  | _||_|  ||_| _
+
+      """
+
+  Scenario: User story 3
+    Given there is output "457508000" with with digits:
+      """
+^    _  _  _  _  _  _  _  _
+^|_||_   ||_ | ||_|| || || |
+^  | _|  | _||_||_||_||_||_|
+
+      """
+
+  Scenario: User story 3
+    Given there is output "664371495 ERR" with with digits:
+      """
+^ _  _     _  _        _  _
+^|_ |_ |_| _|  |  ||_||_||_
+^|_||_|  | _|  |  |  | _| _|
+
+      """
+
+  Scenario: User story 3
+    Given there is output "86110??36 ILL" with with digits:
+      """
+^ _  _        _        _  _
+^|_||_   |  || |   |_| _||_
+^|_||_|  |  ||_|  || | _||_|
+
+      """
