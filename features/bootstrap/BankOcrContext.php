@@ -98,9 +98,22 @@ class BankOcrContext implements Context
     {
         $preprocessedDigitsString = $this->decipherService->preprocess($digits);
         $result = $this->decipherService->getOutputWithStatus($preprocessedDigitsString);
-        dump($output, $result);
         Assert::assertSame(
             $output,
+            $result,
+        );
+    }
+
+    /**
+     * @Given guessed output :expected with digits:
+     */
+    public function guessedOutputWithDigits($expected, PyStringNode $digits)
+    {
+        $preprocessedDigitsString = $this->decipherService->preprocess($digits);
+        $result = $this->decipherService->guessOutput($preprocessedDigitsString);
+        dump('$expected', $expected, '$result', $result);
+        Assert::assertSame(
+            $expected,
             $result,
         );
     }

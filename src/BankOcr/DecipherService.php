@@ -6,6 +6,8 @@ declare(strict_types=1);
 namespace Katas\BankOcr;
 
 
+use LogicException;
+
 class DecipherService
 {
     public function __construct(
@@ -18,17 +20,9 @@ class DecipherService
 
     public function readSingleEntry(string $entry): string
     {
-        $digits = [];
-        $lines = explode("\n", $entry);
-        foreach ($lines as $lineNb => $line) {
-            $line = str_pad($line, $this->charsCountPerLine);
-            foreach (mb_str_split($line, 3) as $strideNb => $stride) {
-                $digits[$strideNb] = ($digits[$strideNb] ?? '') . $stride;
-            }
-        }
+        $digits = $this->extractDigits($entry);
 
-        $mappedSingleDigits = array_map([$this, 'readSingleDigit'], $digits);
-        return implode('', $mappedSingleDigits);
+        return $this->mapExtractedDigits($digits);
     }
 
     public function readSingleDigit(string $digit): string
@@ -103,5 +97,96 @@ class DecipherService
             return $number . ' ERR';
         }
         return $number;
+    }
+
+    private function guessSingleEntry(string $entry): string
+    {
+        $solutions = [];
+        $digits = $this->extractDigits($entry);
+        $patchesMap = [
+            ' ' => ['_'],
+            '_' => [' '],
+            '|' => [],
+        ];
+
+        foreach ($digits as $digitPosition => $digit) {
+            $pieces = mb_str_split($digit);
+            foreach ($pieces as $piecePosition => $piece) {
+                foreach ($patchesMap[$piece] as $patch) {
+                    $piecesCopy = $pieces;
+                    $piecesCopy[$piecePosition] = $patch;
+                    $digitCopy = implode('', $piecesCopy);
+                    $singleDigit = $this->readSingleDigit($digitCopy);
+                    if ('?' === $singleDigit) {
+                        continue;
+                    }
+                    $digitsCopy = $digits;
+                    $digitsCopy[$digitPosition] = $digitCopy;
+                    $accNumber = $this->mapExtractedDigits($digitsCopy);
+                    if ($this->isValidAccountNumber($accNumber)) {
+                        $solutions[] = $accNumber;
+                        continue;
+                    }
+
+                }
+//                if ($piece === '|') {
+//
+//                    continue;
+//                }
+            }
+        }
+        dump($solutions);
+        $solutionsCount = count($solutions);
+        if ($solutionsCount === 0) {
+            return $this->mapExtractedDigits($digits);
+        }
+        if ($solutionsCount === 1) {
+            return $solutions[0];
+        }
+        throw new LogicException('Not yet implemented');
+    }
+
+    public function guessOutput(string $preprocessedDigitsString): string
+    {
+        $statusOutput = $this->getOutputWithStatus($preprocessedDigitsString);
+        if (mb_strlen($statusOutput) === $this->numberLength) {
+            return $statusOutput;
+        }
+        if (str_contains($statusOutput, 'ERR')) {
+            //modify
+            //test if modified part is a real digit
+            //test number validation
+            $guessed = $this->guessSingleEntry($preprocessedDigitsString);
+            dump('"ERR" guessSingleEntry:', $guessed);
+            return $guessed;
+        }
+        if (str_contains($statusOutput, 'ILL')) {
+//            dump($preprocessedDigitsString);
+        }
+
+        return $statusOutput;//TODO logic exception?
+    }
+
+    private function extractDigits(string $entry): array
+    {
+        $digits = [];
+        $lines = explode("\n", $entry);
+        foreach ($lines as $lineNb => $line) {
+            $line = str_pad($line, $this->charsCountPerLine);
+            foreach (mb_str_split($line, 3) as $strideNb => $stride) {
+                $digits[$strideNb] = ($digits[$strideNb] ?? '') . $stride;
+            }
+        }
+        return $digits;
+    }
+
+    /**
+     * @param array $digits
+     * @return string
+     */
+    private function mapExtractedDigits(array $digits): string
+    {
+        $mappedSingleDigits = array_map([$this, 'readSingleDigit'], $digits);
+        return implode('', $mappedSingleDigits);
     }
 }
