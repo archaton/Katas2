@@ -14,6 +14,8 @@ class BankOcrContext implements Context
     private const DIGIT_CHARS_COUNT = 3;
 
     private DecipherService $decipherService;
+    private string $givenDigits;
+    private array $alternatives;
 
     /**
      * Initializes context.
@@ -25,6 +27,7 @@ class BankOcrContext implements Context
     public function __construct(
     )
     {
+        $this->alternatives = [];
         $this->decipherService = new DecipherService(
             self::LINES_NB,
             self::CHARS_COUNT_PER_LINE,
@@ -116,5 +119,42 @@ class BankOcrContext implements Context
             $expected,
             $result,
         );
+    }
+
+    /**
+     * @Given digits:
+     */
+    public function digits(PyStringNode $digits)
+    {
+        $preprocessedDigitsString = $this->decipherService->preprocess($digits);
+        $this->givenDigits = $preprocessedDigitsString;
+    }
+
+    /**
+     * @Then guessed output is :expected
+     */
+    public function guessedOutputIs($expected)
+    {
+        $result = $this->decipherService->guessOutput($this->givenDigits);
+        $this->alternatives = $this->decipherService->popResultAlternatives();
+        dump($this->alternatives);
+        dump('$expected', $expected, '$result', $result);
+        Assert::assertSame(
+            $expected,
+            $result,
+        );
+    }
+
+    /**
+     * @Given possible alternatives are:
+     */
+    public function possibleAlternativesAre(TableNode $expectedAlternatives)
+    {
+        $this->alternatives = $this->decipherService->popResultAlternatives();
+        dump($this->alternatives);
+        dump($expectedAlternatives->getColumnsHash());
+        dump($expectedAlternatives->getHash());
+        dump($expectedAlternatives->getLines());
+        dump($expectedAlternatives->getTable());
     }
 }

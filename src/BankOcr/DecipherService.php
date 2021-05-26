@@ -10,12 +10,15 @@ use LogicException;
 
 class DecipherService
 {
+    private array $alternatives;
+
     public function __construct(
         private int $linesNb,
         private int $charsCountPerLine,
         private int $numberLength,
     )
     {
+        $this->alternatives = [];
     }
 
     public function readSingleEntry(string $entry): string
@@ -104,9 +107,9 @@ class DecipherService
         $solutions = [];
         $digits = $this->extractDigits($entry);
         $patchesMap = [
-            ' ' => ['_'],
+            ' ' => ['_', '|'],
             '_' => [' '],
-            '|' => [],
+            '|' => [' '],
         ];
 
         foreach ($digits as $digitPosition => $digit) {
@@ -129,10 +132,6 @@ class DecipherService
                     }
 
                 }
-//                if ($piece === '|') {
-//
-//                    continue;
-//                }
             }
         }
         dump($solutions);
@@ -153,11 +152,8 @@ class DecipherService
             return $statusOutput;
         }
         if (str_contains($statusOutput, 'ERR')) {
-            //modify
-            //test if modified part is a real digit
-            //test number validation
             $guessed = $this->guessSingleEntry($preprocessedDigitsString);
-            dump('"ERR" guessSingleEntry:', $guessed);
+//            dump('"ERR" guessSingleEntry:', $guessed);
             return $guessed;
         }
         if (str_contains($statusOutput, 'ILL')) {
@@ -188,5 +184,13 @@ class DecipherService
     {
         $mappedSingleDigits = array_map([$this, 'readSingleDigit'], $digits);
         return implode('', $mappedSingleDigits);
+    }
+
+    public function popResultAlternatives(): array
+    {
+        $alternatives = $this->alternatives;
+//        $this->alternatives = [];//TODO
+
+        return $alternatives;
     }
 }
