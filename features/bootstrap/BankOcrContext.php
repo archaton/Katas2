@@ -137,8 +137,6 @@ class BankOcrContext implements Context
     {
         $result = $this->decipherService->guessOutput($this->givenDigits);
         $this->alternatives = $this->decipherService->popResultAlternatives();
-        dump($this->alternatives);
-        dump('$expected', $expected, '$result', $result);
         Assert::assertSame(
             $expected,
             $result,
@@ -152,9 +150,7 @@ class BankOcrContext implements Context
     {
         $this->alternatives = $this->decipherService->popResultAlternatives();
         dump($this->alternatives);
-        dump($expectedAlternatives->getColumnsHash());
-        dump($expectedAlternatives->getHash());
-        dump($expectedAlternatives->getLines());
-        dump($expectedAlternatives->getTable());
+        dump(array_values($expectedAlternatives->getColumnsHash()));
+        //TODO
     }
 }

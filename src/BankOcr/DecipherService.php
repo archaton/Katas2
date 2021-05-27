@@ -102,9 +102,12 @@ class DecipherService
         return $number;
     }
 
+    /**
+     * @throws AmbivalentResultException
+     */
     private function guessSingleEntry(string $entry): string
     {
-        $solutions = [];
+        $this->alternatives = [];
         $digits = $this->extractDigits($entry);
         $patchesMap = [
             ' ' => ['_', '|'],
@@ -127,22 +130,23 @@ class DecipherService
                     $digitsCopy[$digitPosition] = $digitCopy;
                     $accNumber = $this->mapExtractedDigits($digitsCopy);
                     if ($this->isValidAccountNumber($accNumber)) {
-                        $solutions[] = $accNumber;
+                        $this->alternatives[] = $accNumber;
                         continue;
                     }
 
                 }
             }
         }
-        dump($solutions);
-        $solutionsCount = count($solutions);
+        dump($this->alternatives);
+        $solutionsCount = count($this->alternatives);
         if ($solutionsCount === 0) {
             return $this->mapExtractedDigits($digits);
         }
         if ($solutionsCount === 1) {
-            return $solutions[0];
+            return $this->alternatives[0];
         }
-        throw new LogicException('Not yet implemented');
+
+        throw new AmbivalentResultException();
     }
 
     public function guessOutput(string $preprocessedDigitsString): string
@@ -152,9 +156,11 @@ class DecipherService
             return $statusOutput;
         }
         if (str_contains($statusOutput, 'ERR')) {
-            $guessed = $this->guessSingleEntry($preprocessedDigitsString);
-//            dump('"ERR" guessSingleEntry:', $guessed);
-            return $guessed;
+            try {
+                return $this->guessSingleEntry($preprocessedDigitsString);
+            } catch (AmbivalentResultException $resultException) {
+                return strtr($statusOutput, ['ERR' => 'AMB']);
+            }
         }
         if (str_contains($statusOutput, 'ILL')) {
 //            dump($preprocessedDigitsString);
