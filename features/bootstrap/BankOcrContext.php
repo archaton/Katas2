@@ -15,7 +15,6 @@ class BankOcrContext implements Context
 
     private DecipherService $decipherService;
     private string $givenDigits;
-    private array $alternatives;
 
     /**
      * Initializes context.
@@ -136,7 +135,6 @@ class BankOcrContext implements Context
     public function guessedOutputIs($expected)
     {
         $result = $this->decipherService->guessOutput($this->givenDigits);
-        $this->alternatives = $this->decipherService->popResultAlternatives();
         Assert::assertSame(
             $expected,
             $result,
@@ -148,9 +146,9 @@ class BankOcrContext implements Context
      */
     public function possibleAlternativesAre(TableNode $expectedAlternatives)
     {
-        $this->alternatives = $this->decipherService->popResultAlternatives();
-        dump($this->alternatives);
-        dump(array_values($expectedAlternatives->getColumnsHash()));
-        //TODO
+        $expected = array_column($expectedAlternatives->getColumnsHash(), 'number');
+        $alternatives = $this->decipherService->getResultAlternatives();
+        Assert::assertSame([], array_diff($alternatives, $expected));
+        Assert::assertSame([], array_diff($expected, $alternatives));
     }
 }

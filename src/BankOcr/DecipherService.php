@@ -85,6 +85,9 @@ class DecipherService
         assert($this->numberLength === count($digits));
         $checksum = 0;
         for ($i = 0; $i < $this->numberLength; ++$i) {
+            if ('?' === $digits[$i]) {
+                return false;
+            }
             $checksum += $digits[$i] * $wages[$i];
         }
         return 0 === ($checksum % 11);
@@ -137,7 +140,6 @@ class DecipherService
                 }
             }
         }
-        dump($this->alternatives);
         $solutionsCount = count($this->alternatives);
         if ($solutionsCount === 0) {
             return $this->mapExtractedDigits($digits);
@@ -163,7 +165,7 @@ class DecipherService
             }
         }
         if (str_contains($statusOutput, 'ILL')) {
-//            dump($preprocessedDigitsString);
+            return $this->guessSingleEntry($preprocessedDigitsString);
         }
 
         return $statusOutput;//TODO logic exception?
@@ -192,11 +194,8 @@ class DecipherService
         return implode('', $mappedSingleDigits);
     }
 
-    public function popResultAlternatives(): array
+    public function getResultAlternatives(): array
     {
-        $alternatives = $this->alternatives;
-//        $this->alternatives = [];//TODO
-
-        return $alternatives;
+        return $this->alternatives;
     }
 }
