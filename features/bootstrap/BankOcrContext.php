@@ -26,7 +26,6 @@ class BankOcrContext implements Context
     public function __construct(
     )
     {
-        $this->alternatives = [];
         $this->decipherService = new DecipherService(
             self::LINES_NB,
             self::CHARS_COUNT_PER_LINE,
@@ -114,7 +113,6 @@ class BankOcrContext implements Context
     {
         $preprocessedDigitsString = $this->decipherService->preprocess($digits);
         $result = $this->decipherService->guessOutput($preprocessedDigitsString);
-        dump('$expected', $expected, '$result', $result);
         Assert::assertSame(
             $expected,
             $result,
