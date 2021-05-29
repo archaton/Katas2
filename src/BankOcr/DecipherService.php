@@ -6,8 +6,6 @@ declare(strict_types=1);
 namespace Katas\BankOcr;
 
 
-use LogicException;
-
 class DecipherService
 {
     private array $alternatives;
@@ -16,6 +14,7 @@ class DecipherService
         private int $linesNb,
         private int $charsCountPerLine,
         private int $numberLength,
+        private int $digitCharsLength,
     )
     {
         $this->alternatives = [];
@@ -136,7 +135,6 @@ class DecipherService
                         $this->alternatives[] = $accNumber;
                         continue;
                     }
-
                 }
             }
         }
@@ -168,7 +166,7 @@ class DecipherService
             return $this->guessSingleEntry($preprocessedDigitsString);
         }
 
-        return $statusOutput;//TODO logic exception?
+        return $statusOutput;
     }
 
     private function extractDigits(string $entry): array
@@ -177,7 +175,7 @@ class DecipherService
         $lines = explode("\n", $entry);
         foreach ($lines as $lineNb => $line) {
             $line = str_pad($line, $this->charsCountPerLine);
-            foreach (mb_str_split($line, 3) as $strideNb => $stride) {
+            foreach (mb_str_split($line, $this->digitCharsLength) as $strideNb => $stride) {
                 $digits[$strideNb] = ($digits[$strideNb] ?? '') . $stride;
             }
         }

@@ -11,7 +11,7 @@ class BankOcrContext implements Context
     private const LINES_NB = 4;
     private const CHARS_COUNT_PER_LINE = 27;
     private const NUMBER_LENGTH = 9;
-    private const DIGIT_CHARS_COUNT = 3;
+    private const DIGIT_CHARS_LENGTH = 3;
 
     private DecipherService $decipherService;
     private string $givenDigits;
@@ -31,6 +31,7 @@ class BankOcrContext implements Context
             self::LINES_NB,
             self::CHARS_COUNT_PER_LINE,
             self::NUMBER_LENGTH,
+            self::DIGIT_CHARS_LENGTH,
         );
     }
 
@@ -39,7 +40,7 @@ class BankOcrContext implements Context
      */
     public function thereIsASingleNumberWithDigit($number, PyStringNode $digit)
     {
-        $digitCharsCountWithSpecialStartMark = self::DIGIT_CHARS_COUNT + 1;
+        $digitCharsCountWithSpecialStartMark = self::DIGIT_CHARS_LENGTH + 1;
         $digit = new PyStringNode(array_map(
             static fn (string $line): string => str_pad($line, $digitCharsCountWithSpecialStartMark),
             $digit->getStrings()
